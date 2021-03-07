@@ -1,0 +1,38 @@
+{
+  "name": "jest-esbuild",
+  "description": "A Jest esbuild transformer.",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "license": "MIT",
+  "author": "hannoeru <me@hanlee.co>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hannoeru/jest-esbuild"
+  },
+  "homepage": "https://github.com/hannoeru/jest-esbuild",
+  "bugs": "https://github.com/hannoeru/jest-esbuild/issues",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "npm run build -- --watch",
+    "build": "tsup src/index.ts --dts --format cjs,esm",
+    "prepublishOnly": "npm run build",
+    "release": "npx bumpp --push --tag --commit && npm publish",
+    "example:test": "npm -C example run test"
+  },
+  "dependencies": {
+    "@jest/transform": "^26.6.2",
+    "debug": "^4.3.2",
+    "esbuild": "^0.8.56"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^0.4.3",
+    "eslint": "^7.17.0",
+    "tslib": "^2.1.0",
+    "tsup": "^3.11.0",
+    "typescript": "^4.1.3"
+  }
+}
