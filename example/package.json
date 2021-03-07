@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "test": "jest"
+    "test": "DEBUG=jest-esbuild* jest"
   },
   "devDependencies": {
     "@types/jest": "^26.0.20",

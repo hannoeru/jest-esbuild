@@ -1,6 +1,8 @@
+
 import { relative, extname } from 'path'
 import fs from 'fs'
 import { createHash } from 'crypto'
+import Debug from 'debug'
 import type {
   Transformer,
 } from '@jest/transform'
@@ -8,12 +10,16 @@ import { transformSync, Loader } from 'esbuild'
 import { resolveOptions } from './options'
 import { UserOptions } from './type'
 
+const debug = Debug('jest-esbuild')
+
 const THIS_FILE = fs.readFileSync(__filename)
 
 type CreateTransformer = Transformer['createTransformer']
 
 export const createTransformer: CreateTransformer = (userOptions: UserOptions = {}) => {
   const options = resolveOptions(userOptions)
+
+  debug('%O', options)
 
   return {
     canInstrument: true,
@@ -41,10 +47,15 @@ export const createTransformer: CreateTransformer = (userOptions: UserOptions = 
     process(sourceText, sourcePath) {
       const result = transformSync(sourceText, {
         ...options,
-        loader: userOptions.loader || extname(sourcePath) as Loader,
+        loader: userOptions.loader || extname(sourcePath).slice(1) as Loader,
       })
 
       if (result) {
+        if (result.warnings.length) {
+          result.warnings.forEach((m) => {
+            console.warn(m)
+          })
+        }
         const { code, map } = result
         if (typeof code === 'string')
           return { code, map }
