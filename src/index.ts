@@ -1,10 +1,10 @@
-import path from 'path'
+import { relative, extname } from 'path'
 import fs from 'fs'
 import { createHash } from 'crypto'
 import type {
   Transformer,
 } from '@jest/transform'
-import { transformSync } from 'esbuild'
+import { transformSync, Loader } from 'esbuild'
 import { resolveOptions } from './options'
 import { UserOptions } from './type'
 
@@ -27,7 +27,7 @@ export const createTransformer: CreateTransformer = (userOptions: UserOptions = 
         .update('\0', 'utf8')
         .update(fileData)
         .update('\0', 'utf8')
-        .update(path.relative(config.rootDir, filePath))
+        .update(relative(config.rootDir, filePath))
         .update('\0', 'utf8')
         .update(configStr)
         .update('\0', 'utf8')
@@ -38,8 +38,11 @@ export const createTransformer: CreateTransformer = (userOptions: UserOptions = 
         .update(process.env.NODE_ENV || '')
         .digest('hex')
     },
-    process(sourceText) {
-      const result = transformSync(sourceText, options)
+    process(sourceText, sourcePath) {
+      const result = transformSync(sourceText, {
+        ...options,
+        loader: userOptions.loader || extname(sourcePath) as Loader,
+      })
 
       if (result) {
         const { code, map } = result
