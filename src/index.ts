@@ -14,17 +14,15 @@ const debug = Debug('jest-esbuild')
 
 const THIS_FILE = fs.readFileSync(__filename)
 
-type CreateTransformer = Transformer['createTransformer']
-
-export const createTransformer: CreateTransformer = (userOptions: UserOptions = {}) => {
+const createTransformer = (userOptions: UserOptions = {}): Transformer<UserOptions> => {
   const options = resolveOptions(userOptions)
 
   debug('%O', options)
 
   return {
     canInstrument: true,
-    getCacheKey(fileData, filePath, configStr, transformOptions) {
-      const { config, instrument } = transformOptions
+    getCacheKey(fileData, filePath, transformOptions) {
+      const { config, instrument, configString } = transformOptions
 
       return createHash('md5')
         .update(THIS_FILE)
@@ -35,7 +33,7 @@ export const createTransformer: CreateTransformer = (userOptions: UserOptions = 
         .update('\0', 'utf8')
         .update(relative(config.rootDir, filePath))
         .update('\0', 'utf8')
-        .update(configStr)
+        .update(configString)
         .update('\0', 'utf8')
         .update(filePath)
         .update('\0', 'utf8')
@@ -53,6 +51,7 @@ export const createTransformer: CreateTransformer = (userOptions: UserOptions = 
       if (result) {
         if (result.warnings.length) {
           result.warnings.forEach((m) => {
+            // eslint-disable-next-line no-console
             console.warn(m)
           })
         }
@@ -64,4 +63,8 @@ export const createTransformer: CreateTransformer = (userOptions: UserOptions = 
       return sourceText
     },
   }
+}
+
+export default {
+  createTransformer,
 }

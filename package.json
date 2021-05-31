@@ -24,16 +24,19 @@
     "example:test": "npm -C example run test"
   },
   "dependencies": {
-    "@jest/transform": "^26.6.2",
     "debug": "^4.3.2",
-    "esbuild": "^0.11.15"
+    "esbuild": "^0.12.5"
+  },
+  "peerDependencies": {
+    "jest": "^27.0.3"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^0.6.4",
+    "@antfu/eslint-config": "^0.6.5",
+    "@jest/transform": "^27.0.2",
     "@types/debug": "^4.1.5",
-    "eslint": "^7.25.0",
+    "eslint": "^7.27.0",
     "tslib": "^2.2.0",
-    "tsup": "^4.10.0",
-    "typescript": "^4.2.4"
+    "tsup": "^4.11.1",
+    "typescript": "^4.3.2"
   }
 }
