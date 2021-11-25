@@ -1,7 +1,7 @@
 {
   "name": "jest-esbuild",
   "description": "A Jest esbuild transformer.",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -20,7 +20,7 @@
     "dev": "npm run build -- --watch",
     "build": "tsup src/index.ts --dts --format cjs,esm",
     "prepublishOnly": "npm run build",
-    "release": "npx git-ensure -a && npx bumpp --commit --tag --push",
+    "release": "bumpp --commit --tag --push",
     "example:test": "npm -C example run test"
   },
   "dependencies": {
@@ -35,6 +35,7 @@
     "@hannoeru/eslint-config": "^0.3.5",
     "@jest/transform": "^27.3.1",
     "@types/debug": "^4.1.7",
+    "bumpp": "^7.1.1",
     "eslint": "^8.3.0",
     "tsup": "^5.9.2",
     "typescript": "^4.5.2"
