@@ -1,7 +1,7 @@
 {
   "name": "jest-esbuild",
   "description": "A Jest esbuild transformer.",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
