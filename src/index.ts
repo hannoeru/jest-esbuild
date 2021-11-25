@@ -1,18 +1,13 @@
 
 import { relative, extname } from 'path'
-import fs from 'fs'
 import { createHash } from 'crypto'
 import Debug from 'debug'
-import type {
-  Transformer,
-} from '@jest/transform'
 import { transformSync, Loader } from 'esbuild'
+import { Transformer } from '@jest/transform'
 import { resolveOptions } from './options'
 import { UserOptions } from './type'
 
 const debug = Debug('jest-esbuild')
-
-const THIS_FILE = fs.readFileSync(__filename)
 
 const createTransformer = (userOptions: UserOptions = {}): Transformer<UserOptions> => {
   const options = resolveOptions(userOptions)
@@ -25,8 +20,6 @@ const createTransformer = (userOptions: UserOptions = {}): Transformer<UserOptio
       const { config, instrument, configString } = transformOptions
 
       return createHash('md5')
-        .update(THIS_FILE)
-        .update('\0', 'utf8')
         .update(JSON.stringify(options))
         .update('\0', 'utf8')
         .update(fileData)
@@ -42,10 +35,10 @@ const createTransformer = (userOptions: UserOptions = {}): Transformer<UserOptio
         .update(process.env.NODE_ENV || '')
         .digest('hex')
     },
-    process(sourceText, sourcePath) {
-      const result = transformSync(sourceText, {
+    process(source, path) {
+      const result = transformSync(source, {
         ...options,
-        loader: userOptions.loader || extname(sourcePath).slice(1) as Loader,
+        loader: userOptions.loader || extname(path).slice(1) as Loader,
       })
 
       if (result) {
@@ -55,12 +48,13 @@ const createTransformer = (userOptions: UserOptions = {}): Transformer<UserOptio
             console.warn(m)
           })
         }
-        const { code, map } = result
-        if (typeof code === 'string')
-          return { code, map }
+        return {
+          code: result.code,
+          map: result.map,
+        }
       }
 
-      return sourceText
+      return source
     },
   }
 }
