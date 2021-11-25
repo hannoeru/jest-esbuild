@@ -9,6 +9,13 @@ import { UserOptions } from './type'
 
 const debug = Debug('jest-esbuild')
 
+export const TS_TSX_REGEX = /\.tsx?$/
+export const JS_JSX_REGEX = /\.jsx?$/
+
+function isTarget(path: string) {
+  return JS_JSX_REGEX.test(path) || TS_TSX_REGEX.test(path)
+}
+
 const createTransformer = (userOptions: UserOptions = {}): Transformer<UserOptions> => {
   const options = resolveOptions(userOptions)
 
@@ -36,25 +43,24 @@ const createTransformer = (userOptions: UserOptions = {}): Transformer<UserOptio
         .digest('hex')
     },
     process(source, path) {
+      if (!isTarget(path))
+        return source
+
       const result = transformSync(source, {
         ...options,
         loader: userOptions.loader || extname(path).slice(1) as Loader,
       })
 
-      if (result) {
-        if (result.warnings.length) {
-          result.warnings.forEach((m) => {
-            // eslint-disable-next-line no-console
-            console.warn(m)
-          })
-        }
-        return {
-          code: result.code,
-          map: result.map,
-        }
+      if (result.warnings.length) {
+        result.warnings.forEach((m) => {
+          // eslint-disable-next-line no-console
+          console.warn(m)
+        })
       }
-
-      return source
+      return {
+        code: result.code,
+        map: result.map,
+      }
     },
   }
 }
