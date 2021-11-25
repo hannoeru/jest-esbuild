@@ -14,7 +14,9 @@
   "homepage": "https://github.com/hannoeru/jest-esbuild",
   "bugs": "https://github.com/hannoeru/jest-esbuild/issues",
   "files": [
-    "dist"
+    "dist",
+    "jest-preset.js",
+    "LICENSE"
   ],
   "scripts": {
     "dev": "npm run build -- --watch",
