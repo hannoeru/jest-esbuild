@@ -1,3 +1,3 @@
 {
-  "extends": "@antfu/eslint-config"
+  "extends": "@hannoeru"
 }
