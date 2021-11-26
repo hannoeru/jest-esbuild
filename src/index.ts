@@ -18,6 +18,15 @@ function isTarget(path: string) {
   return JS_JSX_REGEX.test(path) || TS_TSX_REGEX.test(path)
 }
 
+declare module '@jest/types' {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace Config {
+    interface ConfigGlobals {
+      'jest-esbuild'?: UserOptions
+    }
+  }
+}
+
 const createTransformer = (userOptions: UserOptions = {}): Transformer<UserOptions> => {
   const options = resolveOptions(userOptions)
 
