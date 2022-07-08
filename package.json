@@ -2,6 +2,7 @@
   "name": "jest-esbuild",
   "version": "0.2.7",
   "description": "A Jest esbuild transformer.",
+  "packageManager": "pnpm@7.5.0",
   "license": "MIT",
   "repository": {
     "type": "git",
