@@ -1,6 +1,6 @@
 {
   "name": "jest-esbuild",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "A Jest esbuild transformer.",
   "license": "MIT",
   "repository": {
