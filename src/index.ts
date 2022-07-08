@@ -18,6 +18,7 @@ function isTarget(path: string) {
   return JS_JSX_REGEX.test(path) || TS_TSX_REGEX.test(path)
 }
 
+// @ts-ignore - This is injected by the Jest plugin
 declare module '@jest/types' {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Config {
@@ -58,7 +59,9 @@ const createTransformer = (userOptions: UserOptions = {}): Transformer<UserOptio
     process(source, path, transformOptions) {
       const { config } = transformOptions
       if (!isTarget(path))
-        return source
+        return {
+          code: source,
+        }
 
       const result = transformSync(source, {
         ...options,
