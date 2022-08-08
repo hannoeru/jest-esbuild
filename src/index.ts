@@ -28,8 +28,11 @@ declare module '@jest/types' {
   }
 }
 
-const createTransformer = (userOptions: UserOptions = {}): Transformer<UserOptions> => {
+const createTransformer = (opts: UserOptions = {}): Transformer<UserOptions> => {
+  const { implementation, ...userOptions } = opts
+
   const options = resolveOptions(userOptions)
+  const transform = implementation?.transformSync || transformSync
 
   debug('%O', options)
 
@@ -63,7 +66,7 @@ const createTransformer = (userOptions: UserOptions = {}): Transformer<UserOptio
           code: source,
         }
 
-      const result = transformSync(source, {
+      const result = transform(source, {
         ...options,
         ...config.globals['jest-esbuild'] as UserOptions,
         loader: userOptions.loader || extname(path).slice(1) as Loader,

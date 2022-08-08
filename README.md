@@ -20,16 +20,20 @@ Set `transform` TypeScript file to `jest-esbuild` inside `jest.config.js`
 }
 ```
 
-Specify esbuild options
+Specify esbuild implementation and options:
 
 ```js
+const esbuild = require('esbuild')
 const esbuildOptions = {}
 
 module.export = {
   transform: {
     "^.+\\.tsx?$": [
       "jest-esbuild",
-      esbuildOptions
+      {
+        implementation: esbuild,
+        ...esbuildOptions
+      }
     ]
   }
 }
