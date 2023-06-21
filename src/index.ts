@@ -66,6 +66,7 @@ const createTransformer = (userOptions: UserOptions = {}): Transformer<UserOptio
       const result = transformSync(source, {
         ...options,
         ...config.globals['jest-esbuild'] as UserOptions,
+        sourcefile: path,
         loader: userOptions.loader || extname(path).slice(1) as Loader,
       })
 
