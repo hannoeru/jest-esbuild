@@ -84,6 +84,10 @@ const createTransformer = (userOptions: UserOptions = {}): Transformer<UserOptio
   }
 }
 
+export {
+  UserOptions,
+}
+
 export default {
   createTransformer,
 }
