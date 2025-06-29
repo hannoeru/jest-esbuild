@@ -1,10 +1,10 @@
-
-import { relative, extname } from 'path'
-import fs from 'fs'
-import { createHash } from 'crypto'
+import type { Transformer } from '@jest/transform'
+import type { Loader } from 'esbuild'
+import { createHash } from 'node:crypto'
+import fs from 'node:fs'
+import { extname, relative } from 'node:path'
 import Debug from 'debug'
-import { transformSync, Loader } from 'esbuild'
-import { Transformer } from '@jest/transform'
+import { transformSync } from 'esbuild'
 import { resolveOptions } from './options'
 import { UserOptions } from './type'
 
@@ -18,9 +18,8 @@ function isTarget(path: string) {
   return JS_JSX_REGEX.test(path) || TS_TSX_REGEX.test(path)
 }
 
-// @ts-ignore - This is injected by the Jest plugin
 declare module '@jest/types' {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
+  // eslint-disable-next-line ts/no-namespace
   namespace Config {
     interface ConfigGlobals {
       'jest-esbuild'?: UserOptions
@@ -28,7 +27,7 @@ declare module '@jest/types' {
   }
 }
 
-const createTransformer = (userOptions: UserOptions = {}): Transformer<UserOptions> => {
+function createTransformer(userOptions: UserOptions = {}): Transformer<UserOptions> {
   const options = resolveOptions(userOptions)
 
   debug('%O', options)
@@ -53,15 +52,17 @@ const createTransformer = (userOptions: UserOptions = {}): Transformer<UserOptio
         .update('\0', 'utf8')
         .update(instrument ? 'instrument' : '')
         .update('\0', 'utf8')
+        // eslint-disable-next-line node/prefer-global/process
         .update(process.env.NODE_ENV || '')
         .digest('hex')
     },
     process(source, path, transformOptions) {
       const { config } = transformOptions
-      if (!isTarget(path))
+      if (!isTarget(path)) {
         return {
           code: source,
         }
+      }
 
       const result = transformSync(source, {
         ...options,
@@ -72,7 +73,6 @@ const createTransformer = (userOptions: UserOptions = {}): Transformer<UserOptio
 
       if (result.warnings.length) {
         result.warnings.forEach((m) => {
-          // eslint-disable-next-line no-console
           console.warn(m)
         })
       }

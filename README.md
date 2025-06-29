@@ -27,8 +27,8 @@ const esbuildOptions = {}
 
 module.export = {
   transform: {
-    "^.+\\.tsx?$": [
-      "jest-esbuild",
+    '^.+\\.tsx?$': [
+      'jest-esbuild',
       esbuildOptions
     ]
   }
