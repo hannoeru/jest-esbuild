@@ -14,10 +14,10 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v2
 
-      - name: Set node version to 16
+      - name: Set node version
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version-file: .nvmrc
           cache: pnpm
 
       - name: Install dependencies
