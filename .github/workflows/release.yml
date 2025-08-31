@@ -5,6 +5,10 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  id-token: write
+  contents: write
+
 jobs:
   publish-npm:
     runs-on: ubuntu-latest
@@ -30,8 +34,6 @@ jobs:
 
       - name: Publish package
         run: pnpm publish --access public --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
       - name: GitHub Release
         run: pnpm dlx conventional-github-releaser -p angular
